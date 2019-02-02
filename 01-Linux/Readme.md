@@ -176,15 +176,70 @@ See [here](ssh.md) for different types of SSH connection with respect to your OS
 
 1. What is the ``grep``command?
 
+- The grep command is used to find lines that match a pattern (RegEx) given in a file or in standard input. 
+
 2. What is the meaning of ``#!/bin/python`` at the start of scripts?
 
+As explained [here](https://en.wikipedia.org/wiki/Shebang_%28Unix%29), the `#!` at the start of a file is called the `shebang`. In unix-like systems, the presence of those 2 characters makes the loader interpret the file as a script. The string after `#!` specifies which interpreter to use for the script. In this case, it is telling the interpreter to run python (the string afte `#!` is `/bin/python`). 
+
+Analogously, ``#!/bin/bash`` specifies a bash script.
+
 3. Download using ``wget`` the [*bsds500*](https://www2.eecs.berkeley.edu/Research/Projects/CS/vision/grouping/resources.html#bsds500) image segmentation database, and decompress it using ``tar`` (keep it in you hard drive, we will come back over this data in a few weeks).
+
+Commands used:
+```
+wget https://www2.eecs.berkeley.edu/Research/Projects/CS/vision/grouping/resources.html#bsds500
+tar -xvf BSR_bsds500.tgz
+```
  
 4. What is the disk size of the uncompressed dataset, How many images are in the directory 'BSR/BSDS500/data/images'?
+
+Input:
+```
+ls -l  --block-size=M data/
+
+```
+Output:
+```
+total 68M
+drwxr-xr-x 5 mauro mauro  1M Jan 22  2013 BSR
+-rw-r--r-- 1 mauro mauro 68M Jan 22  2013 BSR_bsds500.tgz
+
+```
+
+The compressed file weighs 68MB. 
+
+
+Input:
+```
+find ./data/BSR/BSDS500/data/images/ -type f -name *.jpg | wc -l
+```
+
+Output:
+```
+500
+```
+There are 500 images in the 'BSR/BSDS500/data/images' directory.
  
 5. What are all the different resolutions? What is their format? Tip: use ``awk``, ``sort``, ``uniq`` 
 
+Input:
+```bash
+find ./data/BSR/BSDS500/data/images/ -type f -name *.jpg | xargs identify | awk '{print $3}' | sort  | uniq
+```
+
+Output:
+```bash
+321x481
+481x321
+```
+There are 2 distinct resolutions:
+- 321x481
+- 481x321
+
 6. How many of them are in *landscape* orientation (opposed to *portrait*)? Tip: use ``awk`` and ``cut``
+ 
+
  
 7. Crop all images to make them square (256x256) and save them in a different folder. Tip: do not forget about  [imagemagick](http://www.imagemagick.org/script/index.php).
 
