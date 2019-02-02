@@ -238,10 +238,25 @@ There are 2 distinct resolutions:
 - 481x321
 
 6. How many of them are in *landscape* orientation (opposed to *portrait*)? Tip: use ``awk`` and ``cut``
- 
 
+In order for them to be landscape, they have to have the resolution 481x321. Thus:
  
+Input:
+```bash
+find ./data/BSR/BSDS500/data/images/ -type f -name *.jpg | xargs identify | cut -d ' ' -f 3 | grep '481x321' | wc -l
+```
+
+Output:
+```bash
+348
+```
+
+There are 348 images
+
+
 7. Crop all images to make them square (256x256) and save them in a different folder. Tip: do not forget about  [imagemagick](http://www.imagemagick.org/script/index.php).
+
+
 
 
 # Report
