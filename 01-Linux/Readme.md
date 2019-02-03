@@ -228,7 +228,7 @@ There are 500 images in the 'BSR/BSDS500/data/images' directory.
  
 5. What are all the different resolutions? What is their format? Tip: use ``awk``, ``sort``, ``uniq`` 
 
-
+As seen in class, identify is part of the imagemagick package. It delivers metadata on the image, including its resolution. In fact, it is the 3rd field of its output separating by spaces. To get the different resolutions we first list all of the images with find, then pipe the output with xargs to identify as it doesn't support stdin input very well. After that, the 3rd field of identify is extracted with awk. Finally, all the resolutions are sorted by lexicographical order and feed the output to uniq which eliminates consecutive repeating lines. 
 
 Input:
 ```bash
@@ -262,6 +262,10 @@ There are 348 images in landscape orientation.
 
 
 7. Crop all images to make them square (256x256) and save them in a different folder. Tip: do not forget about  [imagemagick](http://www.imagemagick.org/script/index.php).
+
+convert is part of the imagemagick package and has functions that enable cropping. We need 256x256 images but the position of the crop is never specified. The upper left corner was chosen as the starting point of the crop. Consequently, the parameter after `-crop` is `256x256+0+0`. See [this page](https://deparkes.co.uk/2015/04/30/batch-crop-images-with-imagemagick/) for more info on convert's cropping syntax. 
+
+We begin by listing all of the images with find, as done before. Then, each image is fed to convert through xargs for cropping. An argument needs to be passed to convert as the filename needs to be the first argument. This is done with the `-I` flag which tells xargs to substitute the stdin into the specified string. In this case, `'{}'`. Finally, some funky syntax is used to pass the incoming stdin string as the output filename. This was taken from [this stackoverflow post](https://stackoverflow.com/questions/27778870/imagemagick-convert-to-keep-same-name-for-converted-image). The syntax specifics, quite frankly, are unknown. But the code works like a charm. 
 
 ```bash
 find ./data/BSR/BSDS500/data/images/ -type f -name *.jpg | xargs -I '{}' convert '{}' -crop 256x256+0+0 -set filename:base "%[basename]" "./data/cropped256square/%[filename:base].jpg"
