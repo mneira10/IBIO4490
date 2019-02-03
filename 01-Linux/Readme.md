@@ -226,7 +226,7 @@ Output:
 ```
 There are 500 images in the 'BSR/BSDS500/data/images' directory.
  
-**5. What are all the different resolutions? What is their format? Tip: use ``awk``, ``sort``, ``uniq`` **
+**5. What are all the different resolutions? What is their format? Tip: use ``awk``, ``sort``, ``uniq``**
 
 As seen in class, identify is part of the imagemagick package. It delivers metadata on the image, including its resolution. In fact, it is the 3rd field of its output separating by spaces. To get the different resolutions we first list all of the images with find, then pipe the output with xargs to identify as it doesn't support stdin input very well. After that, the 3rd field of identify is extracted with awk. Finally, all the resolutions are sorted by lexicographical order and feed the output to uniq which eliminates consecutive repeating lines. 
 
