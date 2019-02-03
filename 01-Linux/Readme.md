@@ -176,7 +176,7 @@ See [here](ssh.md) for different types of SSH connection with respect to your OS
 
 1. What is the ``grep``command?
 
-- The grep command is used to find lines that match a pattern (RegEx) given in a file or in standard input. 
+- The grep command is used to find lines that match a pattern (RegEx) given in a file or in standard input. It prints out the lines it finds on stdout. 
 
 2. What is the meaning of ``#!/bin/python`` at the start of scripts?
 
@@ -186,6 +186,8 @@ Analogously, ``#!/bin/bash`` specifies a bash script.
 
 3. Download using ``wget`` the [*bsds500*](https://www2.eecs.berkeley.edu/Research/Projects/CS/vision/grouping/resources.html#bsds500) image segmentation database, and decompress it using ``tar`` (keep it in you hard drive, we will come back over this data in a few weeks).
 
+First, we download the compressed dataset using wget, then we uncompress it using tar with options -xvf.
+
 Commands used:
 ```
 wget https://www2.eecs.berkeley.edu/Research/Projects/CS/vision/grouping/resources.html#bsds500
@@ -193,6 +195,8 @@ tar -xvf BSR_bsds500.tgz
 ```
  
 4. What is the disk size of the uncompressed dataset, How many images are in the directory 'BSR/BSDS500/data/images'?
+
+ls can output the size of files if given the right options. If the memory block size is specified, it will output the size of the files in the specified directory in that size. I have specified it to list the contents of the ./data/ directory and their size in MB using the option `--block-size=M`.
 
 Input:
 ```
@@ -209,6 +213,7 @@ drwxr-xr-x 5 mauro mauro  1M Jan 22  2013 BSR
 
 The compressed file weighs 68MB. 
 
+One way to count the images in the directory is to use find to list all of the files that end in .jpg. Then, we can use `wc -l` to count all of the lines printed to stdout.
 
 Input:
 ```
@@ -222,6 +227,8 @@ Output:
 There are 500 images in the 'BSR/BSDS500/data/images' directory.
  
 5. What are all the different resolutions? What is their format? Tip: use ``awk``, ``sort``, ``uniq`` 
+
+
 
 Input:
 ```bash
@@ -239,7 +246,7 @@ There are 2 distinct resolutions:
 
 6. How many of them are in *landscape* orientation (opposed to *portrait*)? Tip: use ``awk`` and ``cut``
 
-In order for them to be landscape, they have to have the resolution 481x321. Thus:
+Out of the 2 possible resolutions, only 481x321 is landscape. Thus, we can list all the images in the dataset with find, pipe them with xargs to `identify` to get their metadata including their resolution, get the lines containing 481x321 and then count them. This should equal the amount of images in landscape orientation.
  
 Input:
 ```bash
@@ -260,7 +267,15 @@ There are 348 images in landscape orientation.
 find ./data/BSR/BSDS500/data/images/ -type f -name *.jpg | xargs -I '{}' convert '{}' -crop 256x256+0+0 -set filename:base "%[basename]" "./data/cropped256square/%[filename:base].jpg"
 ```
 
+Lets see the results with an image.
 
+**Uncropped:** ./data/BSR/BSDS500/data/images/test/20069.png
+
+![](https://i.imgur.com/lLKcXfc.jpg)
+
+**Cropped:** ./data/cropped256square/20069.png
+
+![](https://i.imgur.com/PZ0kT70.jpg)
 
 
 # Report
