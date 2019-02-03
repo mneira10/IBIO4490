@@ -251,10 +251,14 @@ Output:
 348
 ```
 
-There are 348 images
+There are 348 images in landscape orientation.
 
 
 7. Crop all images to make them square (256x256) and save them in a different folder. Tip: do not forget about  [imagemagick](http://www.imagemagick.org/script/index.php).
+
+```bash
+find ./data/BSR/BSDS500/data/images/ -type f -name *.jpg | xargs -I '{}' convert '{}' -crop 256x256+0+0 -set filename:base "%[basename]" "./data/cropped256square/%[filename:base].jpg"
+```
 
 
 
