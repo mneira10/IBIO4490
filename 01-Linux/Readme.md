@@ -174,17 +174,17 @@ See [here](ssh.md) for different types of SSH connection with respect to your OS
 
 ## Your turn
 
-1. What is the ``grep``command?
+**1. What is the ``grep``command?**
 
 - The grep command is used to find lines that match a pattern (RegEx) given in a file or in standard input. It prints out the lines it finds on stdout. 
 
-2. What is the meaning of ``#!/bin/python`` at the start of scripts?
+**2. What is the meaning of ``#!/bin/python`` at the start of scripts?**
 
 As explained [here](https://en.wikipedia.org/wiki/Shebang_%28Unix%29), the `#!` at the start of a file is called the `shebang`. In unix-like systems, the presence of those 2 characters makes the loader interpret the file as a script. The string after `#!` specifies which interpreter to use for the script. In this case, it is telling the interpreter to run python (the string afte `#!` is `/bin/python`). 
 
 Analogously, ``#!/bin/bash`` specifies a bash script.
 
-3. Download using ``wget`` the [*bsds500*](https://www2.eecs.berkeley.edu/Research/Projects/CS/vision/grouping/resources.html#bsds500) image segmentation database, and decompress it using ``tar`` (keep it in you hard drive, we will come back over this data in a few weeks).
+**3. Download using ``wget`` the [*bsds500*](https://www2.eecs.berkeley.edu/Research/Projects/CS/vision/grouping/resources.html#bsds500) image segmentation database, and decompress it using ``tar`` (keep it in you hard drive, we will come back over this data in a few weeks).**
 
 First, we download the compressed dataset using wget, then we uncompress it using tar with options -xvf.
 
@@ -194,7 +194,7 @@ wget https://www2.eecs.berkeley.edu/Research/Projects/CS/vision/grouping/resourc
 tar -xvf BSR_bsds500.tgz
 ```
  
-4. What is the disk size of the uncompressed dataset, How many images are in the directory 'BSR/BSDS500/data/images'?
+**4. What is the disk size of the uncompressed dataset, How many images are in the directory 'BSR/BSDS500/data/images'?**
 
 ls can output the size of files if given the right options. If the memory block size is specified, it will output the size of the files in the specified directory in that size. I have specified it to list the contents of the ./data/ directory and their size in MB using the option `--block-size=M`.
 
@@ -226,7 +226,7 @@ Output:
 ```
 There are 500 images in the 'BSR/BSDS500/data/images' directory.
  
-5. What are all the different resolutions? What is their format? Tip: use ``awk``, ``sort``, ``uniq`` 
+**5. What are all the different resolutions? What is their format? Tip: use ``awk``, ``sort``, ``uniq`` **
 
 As seen in class, identify is part of the imagemagick package. It delivers metadata on the image, including its resolution. In fact, it is the 3rd field of its output separating by spaces. To get the different resolutions we first list all of the images with find, then pipe the output with xargs to identify as it doesn't support stdin input very well. After that, the 3rd field of identify is extracted with awk. Finally, all the resolutions are sorted by lexicographical order and feed the output to uniq which eliminates consecutive repeating lines. 
 
@@ -244,7 +244,7 @@ There are 2 distinct resolutions:
 - 321x481
 - 481x321
 
-6. How many of them are in *landscape* orientation (opposed to *portrait*)? Tip: use ``awk`` and ``cut``
+**6. How many of them are in *landscape* orientation (opposed to *portrait*)? Tip: use ``awk`` and ``cut``**
 
 Out of the 2 possible resolutions, only 481x321 is landscape. Thus, we can list all the images in the dataset with find, pipe them with xargs to `identify` to get their metadata including their resolution, get the lines containing 481x321 and then count them. This should equal the amount of images in landscape orientation.
  
@@ -261,7 +261,7 @@ Output:
 There are 348 images in landscape orientation.
 
 
-7. Crop all images to make them square (256x256) and save them in a different folder. Tip: do not forget about  [imagemagick](http://www.imagemagick.org/script/index.php).
+**7. Crop all images to make them square (256x256) and save them in a different folder. Tip: do not forget about  [imagemagick](http://www.imagemagick.org/script/index.php).**
 
 convert is part of the imagemagick package and has functions that enable cropping. We need 256x256 images but the position of the crop is never specified. The upper left corner was chosen as the starting point of the crop. Consequently, the parameter after `-crop` is `256x256+0+0`. See [this page](https://deparkes.co.uk/2015/04/30/batch-crop-images-with-imagemagick/) for more info on convert's cropping syntax. 
 
