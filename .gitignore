@@ -10,3 +10,5 @@ _data/
 *.pyc
 .ipynb*
 .vscode
+data/
+.quickdrawcache/
