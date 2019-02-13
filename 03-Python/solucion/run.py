@@ -1,5 +1,6 @@
-#!/home/mauro/anaconda3/bin/python
-from quickdraw import QuickDrawDataGroup, QuickDrawData
+#!/usr/bin/python3
+import matplotlib
+matplotlib.use('agg')
 import matplotlib.pyplot as plt
 from matplotlib import gridspec
 import matplotlib.image as mpimg
@@ -7,6 +8,11 @@ import os
 import glob
 import numpy as np
 
+#print('installing dependencies...')
+#os.system('pip3 install quickdraw')
+#print('installed dependencies.')
+
+from quickdraw import QuickDrawDataGroup, QuickDrawData
 
 def downloadData():
     print('No data found.')
@@ -86,4 +92,4 @@ for i in range(nrow):
         cont += 1
 
 plt.savefig('./sample.png')
-os.system('eog ./sample.png &')
+os.system('display ./sample.png &')
