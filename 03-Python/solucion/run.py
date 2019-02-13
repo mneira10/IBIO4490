@@ -7,10 +7,22 @@ import matplotlib.image as mpimg
 import os
 import glob
 import numpy as np
+import subprocess
 
-#print('installing dependencies...')
-#os.system('pip3 install quickdraw')
-#print('installed dependencies.')
+
+dependenciesInstalled = False 
+
+try: 
+  output = subprocess.check_output("pip3 search quickdraw", shell=True)
+  if 'quickdraw' in str(output): dependenciesInstalled = True
+except:
+  print('quickdraw not installed')
+
+
+if not dependenciesInstalled:
+  print('installing dependencies...')
+  os.system('pip3 install quickdraw')
+  print('installed dependencies.')
 
 from quickdraw import QuickDrawDataGroup, QuickDrawData
 
