@@ -1,5 +1,4 @@
 # Introduction to GIT
-
 ![](https://imgs.xkcd.com/comics/git_2x.png)
 
 ## Preparation
