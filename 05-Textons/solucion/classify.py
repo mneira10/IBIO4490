@@ -1,27 +1,26 @@
-
+#!/usr/bin/python3
 # coding: utf-8
 import numpy as np
-import matplotlib.pyplot as plt
-import cifar10 as cf
 import pickle
 import sys
-from fbCreate import fbCreate
 from skimage import color
 from skimage import io
 from skimage.transform import resize
 from fbRun import fbRun
 import numpy as np
 from computeTextons import computeTextons
-sys.path.append('python')`
+from pathlib import Path
+from sklearn.neighbors import KNeighborsClassifier
 
+
+def fileExists(path):
+    return Path(path).exists()
 
 def toPickle(obj, name):
     pickle.dump(obj, open(name+'.pkl', "wb"))
 
-
 def loadPickle(name):
     return pickle.load(open(name, "rb"))
-
 
 def histc(X, bins):
     import numpy as np
@@ -31,56 +30,54 @@ def histc(X, bins):
         r[i-1] += 1
     return np.array(r)
 
-
 def imagesToGreyscale(imgs, name):
     greys = []
     print("Turning", name, "to greyscale...")
     for i in range(len(imgs['data'])):
-        print('\r', (i+1)*100/len(imgs['data']), '%', end="")
+        print((i+1)*100/len(imgs['data']), '% ')
         greys.append(color.rgb2gray(resize(imgs['data'][i], (32, 32))))
 
     toPickle(greys, './data/'+name)
     print()
-    print(name, "turned and saved to greyscale.')
+    print(name, "turned and saved to greyscale.")
     return greys
 
 
-print("Loading CIFAR10 data...")
-trainData = cf.load_cifar10(meta='cifar10/cifar-10-batches-py/', mode=2)
-testData = cf.load_cifar10(meta='cifar10/cifar-10-batches-py/', mode='test')
-print("CIFAR10 data loaded.")
-
-
-trainGreys = imagesToGreyscale(trainData, 'trainImages')
-testGreys = imagesToGreyscale(testData, 'testImages')
-
-# Create a filter bank with deafult params
-# fbCreate(**kwargs, vis=True) for visualization
-print('Creating filters...')
-fb = fbCreate(support=2, startSigma=0.6)
-
-print("generating train filter responses...")
-trainFilterResponses = fbRun(fb, np.hstack(trainGreys))
-toPickle(filterResponses, './data/trainFilterResponses')
-
-print("generating test filter responses...")
-testFilterResponses = fbRun(fb, np.hstack(testGreys))
-toPickle(filterResponses, './data/testFilterResponses')
-
-ks = [10, 100, 1000, 5000, 10000]
-trainFR = {'data': trainFilterResponses, 'name': 'train'}
-
-# Computer textons from filter
+ks = [50]
+# iterate through k
 for k in ks:
-    print("k="+str(k) + " out of: " + str(ks))
-    map, textons = computeTextons(trainFR['data'], k)
-    mapAndTexton = {'map':map,'textons':textons}
-    toPickle(mapAndTexton,'./data/mapAndTexton'+str(k))
+    kpath = './data/mapAndTexton'+ str(k) + '.pkl'
 
+    # if info for k exists
+    if fileExists(kpath): 
 
+        print('Retrieving map and textons for k =', k)
+        
+        mapNTextons = loadPickle('./data/mapAndTexton'+ str(k) + '.pkl')
+        map = mapNTextons['map']
+        textons = mapNTextons['textons']
 
+        print('Calculating histograms...')
+        numImages = int(map.shape[1]/32)
+        histograms = []
+        #iterate through images
+        for i in range(numImages):
+            print('\r'+'{:.2f}'.format((i+1)*100/numImages)+'%'
+                    #,end=""
+                        )
+            img = map[:,i*32:(i+1)*32]
+            histograms.append(histc(img.flatten(), np.arange(k)))
+            
+        toPickle(histograms,'./data/histo'+str(k)+'.pkl')
+        print()
+        print("k=",k,"histograms calculated.")
 
-
+    
+#from sklearn.neighbors import KNeighborsClassifier
+#neigh = KNeighborsClassifier(n_neighbors=3)
+#neigh.fit(X, y)  
+#tmapBase1 = assignTextons(fbRun(fb,imBase1),textons.transpose())
+#mapAndTexton100.pkl  mapAndTexton10.pkl  testFilterResponses.pkl  testImages.pkl  trainFilterResponses.pkl  trainImages.pkl
 
 # Load more images
 # imTest1 = color.rgb2gray(resize(io.imread('img/moto2.jpg'), (32, 32)))
