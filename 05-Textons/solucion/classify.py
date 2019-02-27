@@ -28,8 +28,8 @@ ks = [10,20,50,100,150,200,500]
 ns = [3,5,10,20,50]
 # iterate through k
 for k in ks:
-    pklpath = './data/histo'+ str(k) + '.pkl'
 
+    pklpath = './data/histo'+ str(k) + '.pkl'
     # if info for k exists
     if fileExists(pklpath): 
 
