@@ -68,37 +68,9 @@ for k in ks:
             img = map[:,i*32:(i+1)*32]
             histograms.append(histc(img.flatten(), np.arange(k)))
             
-        toPickle(histograms,'./data/histo'+str(k)+'.pkl')
+        toPickle(histograms,'./data/histo'+str(k))
         print()
         print("k=",k,"histograms calculated.")
 
     
 
-#tmapBase1 = assignTextons(fbRun(fb,imBase1),textons.transpose())
-#mapAndTexton100.pkl  mapAndTexton10.pkl  testFilterResponses.pkl  testImages.pkl  trainFilterResponses.pkl  trainImages.pkl
-
-
-
-
-
-
-
-# Load more images
-# imTest1 = color.rgb2gray(resize(io.imread('img/moto2.jpg'), (32, 32)))
-# imTest2 = color.rgb2gray(resize(io.imread('img/perro2.jpg'), (32, 32)))
-
-
-# # Calculate texton representation with current texton dictionary
-# from assignTextons import assignTextons
-# tmapBase1 = assignTextons(fbRun(fb, imBase1), textons.transpose())
-# tmapBase2 = assignTextons(fbRun(fb, imBase2), textons.transpose())
-# tmapTest1 = assignTextons(fbRun(fb, imTest1), textons.transpose())
-# tmapTest2 = assignTextons(fbRun(fb, imTest2), textons.transpose())
-
-
-# plt.imshow(imBase2)
-
-
-# Check the euclidean distances between the histograms and convince yourself that the images of the bikes are closer because they have similar texture pattern
-
-# --> Can you tell why do we need to create a histogram before measuring the distance? <---

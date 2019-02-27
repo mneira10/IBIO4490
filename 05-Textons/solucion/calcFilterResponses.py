@@ -40,7 +40,7 @@ def imagesToGreyscale(imgs, name):
     greys = []
     print("Turning", name, "to greyscale...")
     for i in range(len(imgs['data'])):
-        print((i+1)*100/len(imgs['data']), '% ')
+        print('\r' + '{:.2f}'.format((i+1)*100/len(imgs['data']))+ '% ',end="")
         greys.append(color.rgb2gray(resize(imgs['data'][i], (32, 32))))
 
     toPickle(greys, './data/'+name)
@@ -56,12 +56,30 @@ if fileExists('./data/trainImages.pkl') and fileExists('./data/testImages.pkl'):
 
 else:
     print("Loading CIFAR10 data...")
-    trainData = cf.load_cifar10(meta='./cifar-10-batches-py/', mode=2)
+    trainData = cf.load_cifar10(meta='./cifar-10-batches-py/', mode=1)
+    
+    labels = trainData['labels'] 
+    
+    labelIds = np.unique(labels) 
+
+    imgs = []
+    outLabels = []
+    np.random.seed(0)
+
+    for imgId in labelIds: 
+        objIDs = np.where(labels==imgId)[0] 
+        rand100 = np.random.choice(objIDs,100,replace=False) 
+        outLabels += list(labels[rand100]) 
+        imgs += list(trainData['data'][rand100])
+    
+    
     testData = cf.load_cifar10(meta='./cifar-10-batches-py/', mode='test')
     print("CIFAR10 data loaded.")
+    
+    toPickle(outLabels,'./data/trainLabels')
 
-
-    trainGreys = imagesToGreyscale(trainData, 'trainImages')
+    imgDict = {'data':imgs}
+    trainGreys = imagesToGreyscale(imgDict, 'trainImages')
     testGreys = imagesToGreyscale(testData, 'testImages')
 
 
@@ -85,7 +103,8 @@ else:
     testFilterResponses = fbRun(fb, np.hstack(testGreys))
     toPickle(testFilterResponses, './data/testFilterResponses')
 
-ks = [10, 100, 1000, 5000, 10000]
+ks = [10,20,50,100,150,200,500]
+
 trainFR = {'data': trainFilterResponses, 'name': 'train'}
 print('Calculating textons...')
 # Computer textons from filter
@@ -100,22 +119,3 @@ for k in ks:
 
 
 
-# Load more images
-# imTest1 = color.rgb2gray(resize(io.imread('img/moto2.jpg'), (32, 32)))
-# imTest2 = color.rgb2gray(resize(io.imread('img/perro2.jpg'), (32, 32)))
-
-
-# # Calculate texton representation with current texton dictionary
-# from assignTextons import assignTextons
-# tmapBase1 = assignTextons(fbRun(fb, imBase1), textons.transpose())
-# tmapBase2 = assignTextons(fbRun(fb, imBase2), textons.transpose())
-# tmapTest1 = assignTextons(fbRun(fb, imTest1), textons.transpose())
-# tmapTest2 = assignTextons(fbRun(fb, imTest2), textons.transpose())
-
-
-# plt.imshow(imBase2)
-
-
-# Check the euclidean distances between the histograms and convince yourself that the images of the bikes are closer because they have similar texture pattern
-
-# --> Can you tell why do we need to create a histogram before measuring the distance? <---
