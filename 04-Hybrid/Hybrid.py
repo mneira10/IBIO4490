@@ -1,4 +1,4 @@
-
+#!/usr/bin/python3
 # coding: utf-8
 
 
@@ -19,7 +19,7 @@ duque = cv2.cvtColor(im, cv2.COLOR_BGR2RGB)
 
 im = cv2.imread('./imgs/uribe.jpg')
 uribe = cv2.cvtColor(im, cv2.COLOR_BGR2RGB)
-print(uribe.shape)
+
 
 
 def fourier(im):
