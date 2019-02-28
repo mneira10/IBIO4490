@@ -1,4 +1,4 @@
-#!/home/mauro/anaconda3/bin/python
+#!/usr/bin/python3
 import matplotlib
 matplotlib.use('agg')
 import matplotlib.pyplot as plt
