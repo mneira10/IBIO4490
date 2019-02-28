@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/home/mauro/anaconda3/bin/python
 import matplotlib
 matplotlib.use('agg')
 import matplotlib.pyplot as plt
@@ -8,22 +8,6 @@ import os
 import glob
 import numpy as np
 import subprocess
-
-
-dependenciesInstalled = False 
-
-try: 
-  output = subprocess.check_output("pip3 search quickdraw", shell=True)
-  if 'quickdraw' in str(output): dependenciesInstalled = True
-except:
-  print('quickdraw not installed')
-
-
-if not dependenciesInstalled:
-  print('installing dependencies...')
-  os.system('pip3 install quickdraw')
-  print('installed dependencies.')
-
 from quickdraw import QuickDrawDataGroup, QuickDrawData
 
 def downloadData():
