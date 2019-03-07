@@ -21,7 +21,7 @@ def moveColor(image, color):
                'lab+xy': cv2.COLOR_RGB2LAB, 'hsv+xy': cv2.COLOR_RGB2HSV, 'gray': cv2.COLOR_RGB2GRAY}
 
     transform = choices[color]
-    print('Transforming from rgb to {}'.format(transform))
+    # print('Transforming from rgb to {}'.format(transform))
     if transform != -10:
         image = cv2.cvtColor(image, transform)
     if color.endswith('xy'):
@@ -121,9 +121,9 @@ def evalMetric(originalLabels, predictedLabels):
 
 
 def segmentByClustering(image, color, k, method):
-    print('Segmenting image. Colorspace = {} Method = {} k = {}'.format(color,method,k))
+    # print('Segmenting image. Colorspace = {} Method = {} k = {}'.format(color,method,k))
     image = moveColor(image, color)
-    print('Clustering')
+    # print('Clustering')
     segmentedImage = clusterImage(image, method, k)
     return segmentedImage
 

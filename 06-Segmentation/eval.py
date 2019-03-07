@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 from Segment import segmentByClustering, evalMetric
 import imageio
+import matplotlib.pyplot as plt
 
 
 def imshow(img, seg, title='Image'):
@@ -24,7 +25,9 @@ def gtSegmentation(imgName):
     import scipy.io as sio
     gt = sio.loadmat(imgName.replace('jpg', 'mat'))
     #print(gt['groundTruth'])
-    segm = gt['groundTruth'][0][0][0]['Segmentation']
+    segm = gt['groundTruth'][0,1][0][0]['Segmentation']
+    # plt.imshow(segm)
+    # plt.show()
     return segm
 
 def check_dataset(folder):
@@ -35,17 +38,21 @@ def check_dataset(folder):
 
 def evalDB(files,color,k,method):
     ans = 0
-    for daFile in files:
+    for i,daFile in enumerate(files):
+        print('\r{:.2f}%'.format(100*(i+1)/len(files)),end='')
+        # print(daFile)
         ans += evalFile(daFile,color,k,method)
+    print()
     return ans/len(files)
 
 
 def evalFile(daFile,color,k,method):
-    print(daFile)
+    # print(daFile)
     daFile = './BSDS_small/val/'+daFile
     imag = imageio.imread(daFile+'.jpg')
     gt = gtSegmentation(daFile+'.jpg')
-    seg = segmentByClustering(img, color, k, method)
+    seg = segmentByClustering(imag, color, k, method)
+    
     return evalMetric(gt, seg)
     
     
@@ -61,7 +68,7 @@ if __name__ == '__main__':
         for method in ['kmeans', 'gmm', 'hierarchical', 'watershed']:
             for color in ['rgb', 'lab', 'hsv', 'rgb+xy', 'lab+xy', 'hsv+xy']:
                 
-                print("{} {} {}\n".format(color,k,method))
+                print("{} {} {}".format(color,k,method))
                 metric = evalDB(onlyfiles,color,k,method)
                 print(metric)
                 f= open("results.txt","a")
