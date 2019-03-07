@@ -1,6 +1,5 @@
+#!/usr/bin/python3
 # -*- coding: utf-8 -*-
-#!/usr/bin/python
-
 
 def imshow(img, seg, title='Image'):
     import matplotlib.pyplot as plt
@@ -11,8 +10,6 @@ def imshow(img, seg, title='Image'):
     plt.title(title)
     plt.axis('off')
     plt.show()
-
-
 def groundtruth(img_file):
     import scipy.io as sio
     img = imageio.imread(img_file)
