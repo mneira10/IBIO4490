@@ -79,6 +79,7 @@ Also:
 - PLEASE, use subsections. One full section with ten paragraphs is very difficult to follow if you do not do it perfectly. Instead, you can easily separate each couple (several) paragraph by subsections which gives clarity and elegance. 
 - PLEASE, PLEASE, PLEASE (Almost crying) if you want to look like a high school teenager writing a paper, use screenshots. There is nothing less professional than that. You think it is non-sense but it does not. One of the reason we all use Latex is its excellence visual aesthetic. Every time you upload a screenshot to Overleaf, someone dies.  
 
+
 ## Deadline
 **March 24 11:59pm**.
 
