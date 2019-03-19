@@ -16,3 +16,7 @@ clone/
 cifar-10-batches-py/
 dataOld/
 html/
+08-PHOW/data
+vlfeat
+*/matlab/data
+*/python/data
