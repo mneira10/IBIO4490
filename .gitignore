@@ -22,3 +22,4 @@ www
 vlfeat
 */matlab/data
 */python/data
+*.csv
