@@ -80,7 +80,9 @@ class Model():
 def train(model):
     x_train, y_train, x_test, y_test = get_data()
     batch_size = 100 # Change if you want
-    epochs = 40000 # Change if you want
+    epochs = 200 # Change if you want
+    tot_train_loss=[]
+    tot_test_loss = []
     for i in range(epochs):
         loss = []
         for j in range(0,x_train.shape[0], batch_size):
@@ -91,13 +93,25 @@ def train(model):
             model.compute_gradient(_x_train, out, _y_train)
         out = model.forward(x_test)                
         loss_test = model.compute_loss(out, y_test)
-        print('Epoch {:6d}: {:.5f} | test: {:.5f}'.format(i, np.array(loss).mean(), loss_test))
-	# plot()
+        loss_train = np.array(loss).mean()
+        print('Epoch {:6d}: {:.5f} | test: {:.5f}'.format(i, loss_train, loss_test))
+        tot_train_loss.append(loss_train)
+        tot_test_loss.append(loss_test)
+    plot(tot_train_loss,tot_test_loss,model.lr)
 
-def plot(): # Add arguments
+def plot(train_loss,test_loss,lr): # Add arguments
     # CODE HERE
     # Save a pdf figure with train and test losses
-    pass
+    assert len(train_loss) == len(test_loss)
+    epochs = [x+1 for x in range(len(train_loss))]
+    plt.plot(epochs,train_loss,label='Training loss')
+    plt.plot(epochs,test_loss,label='Test loss')
+    plt.xlabel('Epochs')
+    plt.ylabel('Loss')
+    plt.title('Learning rate = {}'.format(lr))
+    plt.legend()
+    plt.savefig('{}.png'.format(lr))
+    # pass
 
 def test(model):
     # _, _, x_test, y_test = get_data()
