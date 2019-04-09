@@ -1,5 +1,6 @@
 
 import numpy as np
+import torch 
 
 def get_data():
     # angry, disgust, fear, happy, sad, surprise, neutral
@@ -46,3 +47,21 @@ def get_data():
 
     return x_train, y_train, x_test, y_test
 
+def validate(model,test_loader):
+    with torch.no_grad():
+        correct = 0
+        total = 0
+        for images, labels in test_loader:
+            #images = images.reshape(-1, 48*48).float().to(device)
+            images = images.unsqueeze(1).float().to(device)
+            labels = labels.long().to(device)
+            
+            # images = images.reshape(-1, 28*28).to(device)
+            # labels = labels.to(device)
+            outputs = model(images)
+            _, predicted = torch.max(outputs.data, 1)
+            total += labels.size(0)
+            correct += (predicted == labels).sum().item()
+
+        print('Accuracy of the network on the {} test images: {} %'.format(len(test_loader)*batch_size,100 * correct / total))
+        return correct / total
