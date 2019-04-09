@@ -10,8 +10,8 @@ class Fer2013Dataset(Dataset):
 
         lines = np.array(content)
         num_of_instances = lines.size
-        print("number of instances: ", num_of_instances)
-        print("instance length: ", len(lines[1].split(",")[1].split(" ")))
+        # print("number of instances: ", num_of_instances)
+        # print("instance length: ", len(lines[1].split(",")[1].split(" ")))
 
         # x_train, y_train, x_test, y_test = [], [], [], []
         x, y = [], []

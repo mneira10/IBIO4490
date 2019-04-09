@@ -8,6 +8,7 @@ import torch.nn as nn
 import torchvision
 import torchvision.transforms as transforms
 import dataloaders
+import models
 
 
 # Device configuration
@@ -43,20 +44,22 @@ test_loader = torch.utils.data.DataLoader(dataset=test_dataset,
                                           shuffle=False)
 
 # Fully connected neural network with one hidden layer
-class NeuralNet(nn.Module):
-    def __init__(self, input_size, hidden_size, num_classes):
-        super(NeuralNet, self).__init__()
-        self.fc1 = nn.Linear(input_size, hidden_size) 
-        self.relu = nn.ReLU()
-        self.fc2 = nn.Linear(hidden_size, num_classes)  
+# class NeuralNet(nn.Module):
+#     def __init__(self, input_size, hidden_size, num_classes):
+#         super(NeuralNet, self).__init__()
+#         self.fc1 = nn.Linear(input_size, hidden_size) 
+#         self.relu = nn.ReLU()
+#         self.fc2 = nn.Linear(hidden_size, num_classes)  
     
-    def forward(self, x):
-        out = self.fc1(x)
-        out = self.relu(out)
-        out = self.fc2(out)
-        return out
+#     def forward(self, x):
+#         out = self.fc1(x)
+#         out = self.relu(out)
+#         out = self.fc2(out)
+#         return out
 
-model = NeuralNet(input_size, hidden_size, num_classes).to(device)
+# model = models.SimpleFeedForward(input_size, hidden_size, num_classes).to(device)
+model = models.ConvNet().to(device)
+
 
 # Loss and optimizer
 criterion = nn.CrossEntropyLoss()
@@ -68,8 +71,9 @@ total_step = len(train_loader)
 for epoch in range(num_epochs):
     for i, (images, labels) in enumerate(train_loader):  
         # Move tensors to the configured device
-        
-        images = images.reshape(-1, 48*48).float().to(device)
+        #for feed forward
+        # images = images.reshape(-1, 48*48).float().to(device)
+        images = images.unsqueeze(1).float().to(device)
         labels = labels.long().to(device)
         
         # Forward pass
@@ -105,6 +109,6 @@ with torch.no_grad():
     print('Accuracy of the network on the {} test images: {} %'.format(len(test_loader)*batch_size,100 * correct / total))
 
 # Save the model checkpoint
-torch.save(model.state_dict(), 'model.ckpt')
+torch.save(model.state_dict(), 'model.pth')
 
 
