@@ -72,5 +72,5 @@ def validate(model,test_loader,device,test_dataset):
             total += labels.size(0)
             correct += (predicted == labels).sum().item()
 
-        print('Accuracy of the network on the test images: {} %'.format(100 * correct / total))
+        # print('Accuracy of the network on the test images: {} %'.format(100 * correct / total))
         return correct / total, epochLoss/len(test_dataset)

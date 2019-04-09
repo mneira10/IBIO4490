@@ -18,7 +18,7 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 input_size = 48*48
 hidden_size = 500
 num_classes = 7
-num_epochs = 20
+num_epochs = 100
 batch_size = 200
 learning_rate = 0.001
 
@@ -55,7 +55,7 @@ criterion = nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)  
 
 #SCHEDULER
-#scheduler = ReduceLROnPlateau(optimizer, 'min')
+scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'min')
 
 
 # Train the model
@@ -86,11 +86,11 @@ for epoch in range(num_epochs):
         #    print ('Epoch [{}/{}], Step [{}/{}], Loss: {:.4f}' 
         #           .format(epoch+1, num_epochs, i+1, total_step, loss.item()))
     acca,val_loss = validate(model,test_loader,device,test_dataset)
-    print('Epoch [{}/{}] Loss: {:.4f} Test-loss: {:.4f} Test ACCA: {}' .format(epoch+1,num_epochs,epochLoss/len(train_dataset),val_loss,acca))
+    print('Epoch [{}/{}] Loss: {:.4f} Test-loss: {:.4f} Test ACCA: {:.2f}%' .format(epoch+1,num_epochs,epochLoss/len(train_dataset),val_loss,acca*100))
     
     #SCHEDULER 
-    #val_loss = ...
-    #scheduler.step(val_loss)
+    
+    scheduler.step(val_loss)
 # Test the model
 # In test phase, we don't need to compute gradients (for memory efficiency)
 
