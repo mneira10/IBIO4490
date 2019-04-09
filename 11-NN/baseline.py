@@ -1,5 +1,5 @@
 import numpy as np
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 import tqdm 
 import os 
 from utils import get_data
@@ -18,8 +18,8 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 input_size = 48*48
 hidden_size = 500
 num_classes = 7
-num_epochs = 8
-batch_size = 100
+num_epochs = 20
+batch_size = 200
 learning_rate = 0.001
 
 # MNIST dataset 
@@ -44,20 +44,9 @@ test_loader = torch.utils.data.DataLoader(dataset=test_dataset,
                                           shuffle=False)
 
 # Fully connected neural network with one hidden layer
-# class NeuralNet(nn.Module):
-#     def __init__(self, input_size, hidden_size, num_classes):
-#         super(NeuralNet, self).__init__()
-#         self.fc1 = nn.Linear(input_size, hidden_size) 
-#         self.relu = nn.ReLU()
-#         self.fc2 = nn.Linear(hidden_size, num_classes)  
-    
-#     def forward(self, x):
-#         out = self.fc1(x)
-#         out = self.relu(out)
-#         out = self.fc2(out)
-#         return out
-
 # model = models.SimpleFeedForward(input_size, hidden_size, num_classes).to(device)
+
+#simple convolutional nn
 model = models.ConvNet().to(device)
 
 
@@ -66,9 +55,10 @@ criterion = nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)  
 
 # Train the model
-print(train_loader)
+#print(train_loader)
 total_step = len(train_loader)
 for epoch in range(num_epochs):
+    epochLoss = 0
     for i, (images, labels) in enumerate(train_loader):  
         # Move tensors to the configured device
         #for feed forward
@@ -80,23 +70,25 @@ for epoch in range(num_epochs):
         outputs = model(images)
 
         loss = criterion(outputs, labels)
-        
+        epochLoss += outputs.shape[0] * loss.item()
+
         # Backward and optimize
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
         
-        if (i+1) % 100 == 0:
-            print ('Epoch [{}/{}], Step [{}/{}], Loss: {:.4f}' 
-                   .format(epoch+1, num_epochs, i+1, total_step, loss.item()))
-
+        #if (i+1) % 100 == 0:
+        #    print ('Epoch [{}/{}], Step [{}/{}], Loss: {:.4f}' 
+        #           .format(epoch+1, num_epochs, i+1, total_step, loss.item()))
+    print('Epoch [{}/{}] Loss: {:.4f}' .format(epoch+1,num_epochs,epochLoss/len(train_dataset)))
 # Test the model
 # In test phase, we don't need to compute gradients (for memory efficiency)
 with torch.no_grad():
     correct = 0
     total = 0
     for images, labels in test_loader:
-        images = images.reshape(-1, 48*48).float().to(device)
+        #images = images.reshape(-1, 48*48).float().to(device)
+        images = images.unsqueeze(1).float().to(device)
         labels = labels.long().to(device)
         
         # images = images.reshape(-1, 28*28).to(device)
