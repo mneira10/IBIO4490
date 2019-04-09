@@ -86,8 +86,11 @@ for epoch in range(num_epochs):
         #    print ('Epoch [{}/{}], Step [{}/{}], Loss: {:.4f}' 
         #           .format(epoch+1, num_epochs, i+1, total_step, loss.item()))
     acca,val_loss = validate(model,test_loader,device,test_dataset)
-    print('Epoch [{}/{}] Loss: {:.4f} Test-loss: {:.4f} Test ACCA: {:.2f}%' .format(epoch+1,num_epochs,epochLoss/len(train_dataset),val_loss,acca*100))
-    
+    for param_group in optimizer.param_groups:
+        currentLr = param_group['lr']
+
+    print('Epoch [{}/{}] Loss: {:.4f} Test-loss: {:.4f} Test ACCA: {:.2f}% lr: {}' .format(epoch+1,num_epochs,epochLoss/len(train_dataset),val_loss,acca*100,currentLr))
+ 
     #SCHEDULER 
     
     scheduler.step(val_loss)
