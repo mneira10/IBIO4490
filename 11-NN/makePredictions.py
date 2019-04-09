@@ -16,7 +16,7 @@ parser.add_argument('--modelPath', type=str, required=True)
 opts = parser.parse_args()
 
 print("loading model {}".format(opts.modelPath))
-model = models.ConvNet()
+model = models.ConvNet2()
 model.load_state_dict(torch.load(opts.modelPath))
 model.eval()
 

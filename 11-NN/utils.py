@@ -47,7 +47,7 @@ def get_data():
 
     return x_train, y_train, x_test, y_test
 
-def validate(model,test_loader):
+def validate(model,test_loader,device):
     with torch.no_grad():
         correct = 0
         total = 0
@@ -63,5 +63,5 @@ def validate(model,test_loader):
             total += labels.size(0)
             correct += (predicted == labels).sum().item()
 
-        print('Accuracy of the network on the {} test images: {} %'.format(len(test_loader)*batch_size,100 * correct / total))
+        print('Accuracy of the network on the test images: {} %'.format(100 * correct / total))
         return correct / total

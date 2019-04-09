@@ -54,6 +54,10 @@ model = models.ConvNet2().to(device)
 criterion = nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)  
 
+#SCHEDULER
+#scheduler = ReduceLROnPlateau(optimizer, 'min')
+
+
 # Train the model
 #print(train_loader)
 total_step = len(train_loader)
@@ -82,7 +86,11 @@ for epoch in range(num_epochs):
         #    print ('Epoch [{}/{}], Step [{}/{}], Loss: {:.4f}' 
         #           .format(epoch+1, num_epochs, i+1, total_step, loss.item()))
     print('Epoch [{}/{}] Loss: {:.4f}' .format(epoch+1,num_epochs,epochLoss/len(train_dataset)))
-    correct = validate(model,test_loader)
+    correct = validate(model,test_loader,device)
+    
+    #SCHEDULER 
+    #val_loss = ...
+    #scheduler.step(val_loss)
 # Test the model
 # In test phase, we don't need to compute gradients (for memory efficiency)
 
