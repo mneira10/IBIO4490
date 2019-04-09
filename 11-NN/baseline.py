@@ -85,8 +85,8 @@ for epoch in range(num_epochs):
         #if (i+1) % 100 == 0:
         #    print ('Epoch [{}/{}], Step [{}/{}], Loss: {:.4f}' 
         #           .format(epoch+1, num_epochs, i+1, total_step, loss.item()))
-    print('Epoch [{}/{}] Loss: {:.4f}' .format(epoch+1,num_epochs,epochLoss/len(train_dataset)))
-    correct = validate(model,test_loader,device)
+    acca,val_loss = validate(model,test_loader,device,test_dataset)
+    print('Epoch [{}/{}] Loss: {:.4f} Test-loss: {:.4f} Test ACCA: {}' .format(epoch+1,num_epochs,epochLoss/len(train_dataset),val_loss,acca))
     
     #SCHEDULER 
     #val_loss = ...
