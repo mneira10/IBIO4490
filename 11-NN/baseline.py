@@ -47,7 +47,7 @@ test_loader = torch.utils.data.DataLoader(dataset=test_dataset,
 # model = models.SimpleFeedForward(input_size, hidden_size, num_classes).to(device)
 
 #simple convolutional nn
-model = models.ConvNet().to(device)
+model = models.ConvNet2().to(device)
 
 
 # Loss and optimizer
@@ -68,7 +68,8 @@ for epoch in range(num_epochs):
         
         # Forward pass
         outputs = model(images)
-
+        #print(outputs)
+        #print(labels)
         loss = criterion(outputs, labels)
         epochLoss += outputs.shape[0] * loss.item()
 
