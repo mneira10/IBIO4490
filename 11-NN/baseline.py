@@ -22,17 +22,10 @@ num_epochs = 100
 batch_size = 200
 learning_rate = 0.001
 
-# MNIST dataset 
+
 train_dataset = dataloaders.Fer2013Dataset()
 test_dataset  = dataloaders.Fer2013Dataset(test=True)
-# train_dataset = torchvision.datasets.MNIST(root='../../data', 
-#                                            train=True, 
-#                                            transform=transforms.ToTensor(),  
-#                                            download=True)
 
-# test_dataset = torchvision.datasets.MNIST(root='../../data', 
-#                                           train=False, 
-#                                           transform=transforms.ToTensor())
 
 # Data loader
 train_loader = torch.utils.data.DataLoader(dataset=train_dataset, 
@@ -47,7 +40,12 @@ test_loader = torch.utils.data.DataLoader(dataset=test_dataset,
 # model = models.SimpleFeedForward(input_size, hidden_size, num_classes).to(device)
 
 #simple convolutional nn
-model = models.ConvNet2().to(device)
+# model = models.ConvNet2().to(device)
+
+#convolutional net with droput
+model = models.ConvNetDropout().to(device)
+
+
 
 
 # Loss and optimizer
@@ -59,11 +57,12 @@ scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'min')
 
 
 # Train the model
-#print(train_loader)
+
 total_step = len(train_loader)
 for epoch in range(num_epochs):
     epochLoss = 0
     for i, (images, labels) in enumerate(train_loader):  
+        
         # Move tensors to the configured device
         #for feed forward
         # images = images.reshape(-1, 48*48).float().to(device)
@@ -82,9 +81,7 @@ for epoch in range(num_epochs):
         loss.backward()
         optimizer.step()
         
-        #if (i+1) % 100 == 0:
-        #    print ('Epoch [{}/{}], Step [{}/{}], Loss: {:.4f}' 
-        #           .format(epoch+1, num_epochs, i+1, total_step, loss.item()))
+        
     acca,val_loss = validate(model,test_loader,device,test_dataset)
     for param_group in optimizer.param_groups:
         currentLr = param_group['lr']
@@ -94,8 +91,6 @@ for epoch in range(num_epochs):
     #SCHEDULER 
     
     scheduler.step(val_loss)
-# Test the model
-# In test phase, we don't need to compute gradients (for memory efficiency)
 
 
 # Save the model checkpoint

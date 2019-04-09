@@ -52,6 +52,7 @@ def get_data():
 def validate(model,test_loader,device,test_dataset):
     criterion = nn.CrossEntropyLoss()
     with torch.no_grad():
+        model.eval()
         correct = 0
         total = 0
         epochLoss = 0
@@ -73,4 +74,5 @@ def validate(model,test_loader,device,test_dataset):
             correct += (predicted == labels).sum().item()
 
         # print('Accuracy of the network on the test images: {} %'.format(100 * correct / total))
+        model.train()
         return correct / total, epochLoss/len(test_dataset)

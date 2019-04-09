@@ -80,3 +80,50 @@ class ConvNet2(nn.Module):
         out = self.fc2(out)
         return out
 
+class ConvNetDropout(nn.Module):
+    def __init__(self, num_classes=7):
+        super(ConvNetDropout, self).__init__()
+        self.layer1 = nn.Sequential(
+            nn.Conv2d(1, 64, kernel_size=5, stride=1, padding=2),
+            nn.Dropout(0.5),
+            nn.BatchNorm2d(64),
+            nn.ReLU(),
+            nn.MaxPool2d(kernel_size=2, stride=2))
+        self.layer2 = nn.Sequential(
+            nn.Conv2d(64, 32, kernel_size=5, stride=1, padding=2),
+            nn.Dropout(0.5),
+            nn.BatchNorm2d(32),
+            nn.ReLU(),
+            nn.MaxPool2d(kernel_size=2, stride=2))
+        self.layer3 = nn.Sequential(
+            nn.Conv2d(32, 128, kernel_size=5, stride=1, padding=2),
+            nn.Dropout(0.5),
+            nn.BatchNorm2d(128),
+            nn.ReLU(),
+            nn.MaxPool2d(kernel_size=2, stride=2))
+
+        self.fc = nn.Sequential(
+            nn.Linear(6*6*128, 500),
+            nn.Dropout(0.5),
+            nn.ReLU())
+        self.fc2 = nn.Sequential(
+            nn.Linear(500, num_classes),
+            )
+
+        
+
+
+    def forward(self, x):
+        #print('x',x.shape)
+        out = self.layer1(x)
+        #print('l1',out.shape)
+        out = self.layer2(out)
+        #print('l2',out.shape)
+        out = self.layer3(out)
+        #print('l3',out.shape)
+        out = out.reshape(out.size(0), -1)
+        #print('reshape',out.shape)
+        out = self.fc(out)
+        #print('final',out.shape)
+        out = self.fc2(out)
+        return out
