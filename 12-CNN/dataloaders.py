@@ -46,10 +46,11 @@ class CelebADataset(Dataset):
         imgName = self.ids[idx]
         # (218, 178, 3)
         img = cv2.imread('./data/img_align_celeba/'+imgName)
+        img = np.swapaxes(img,0,2)
         lab = self.labels[self.labels.image_id == imgName]
 
         label = lab[self.attributes].values[0]
-
+        label[label==-1]=0
         # sample = {'image':,'label':self.y[idx][0]}
 
         # if self.transform:
