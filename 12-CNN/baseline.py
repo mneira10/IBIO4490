@@ -19,8 +19,8 @@ input_size = 48*48
 hidden_size = 500
 num_classes = 10
 num_epochs = 100
-batch_size = 1
-learning_rate = 0.001
+batch_size = 75
+learning_rate = 0.01
 
 
 train_dataset = dataloaders.CelebADataset('train')
@@ -58,11 +58,11 @@ optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
 
 
 # Train the model
-
+min_val_loss = 9999999
 total_step = len(train_loader)
 for epoch in range(num_epochs):
     epochLoss = 0
-    for i, (images, labels) in enumerate(train_loader):  
+    for i, (images, labels) in tqdm.tqdm(enumerate(train_loader),total=len(train_loader),desc='training..'):  
         
         # Move tensors to the configured device
         #for feed forward
@@ -75,6 +75,7 @@ for epoch in range(num_epochs):
         labels = labels.float().to(device)
 
         # Forward pass
+     #   print('entra!')
         outputs = model(images)
         # print('outputs','labels')
         # print(outputs,labels)
@@ -89,11 +90,13 @@ for epoch in range(num_epochs):
         optimizer.step()
         
         
-    acca,val_loss = validate(model,val_loader,device,val_dataset)
-    for param_group in optimizer.param_groups:
-        currentLr = param_group['lr']
-
-    print('Epoch [{}/{}] Loss: {:.4f} Test-loss: {:.4f} Test ACCA: {:.2f}% lr: {}' .format(epoch+1,num_epochs,epochLoss/len(train_dataset),val_loss,acca*100,currentLr))
+    val_loss = validate(model,val_loader,device,val_dataset)
+    #for param_group in optimizer.param_groups:
+    #    currentLr = param_group['lr']
+    if val_loss < min_val_loss:
+        min_val_loss = val_loss
+        torch.save(model.state_dict(), 'bestCurrentModelLargeTrain.pth')
+    print('Epoch [{}/{}] Loss: {:.4f} Test-loss: {:.4f}' .format(epoch+1,num_epochs,epochLoss/len(train_dataset),val_loss))
  
     #SCHEDULER 
     

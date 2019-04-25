@@ -2,6 +2,7 @@ import numpy as np
 from torch.utils.data import Dataset, DataLoader
 import pandas as pd
 import cv2
+from skimage import io, transform
 
 
 class CelebADataset(Dataset):
@@ -30,8 +31,10 @@ class CelebADataset(Dataset):
 
         partitions = partitions[partitions.partition == partId]
 
-        self.ids = list(partitions[img_id_str])
+        self.ids = np.array(list(partitions[img_id_str]))
 
+        if partition =='train':
+            self.ids = np.random.choice(self.ids,len(self.ids)//5,replace=False)
         labels = pd.read_csv('./data/list_attr_celeba.csv')
         labels = labels[[img_id_str]+attributes]
         labels = labels[labels[img_id_str].isin(self.ids)]
@@ -45,7 +48,9 @@ class CelebADataset(Dataset):
 
         imgName = self.ids[idx]
         # (218, 178, 3)
-        img = cv2.imread('./data/img_align_celeba/'+imgName)
+        #img = cv2.imread('./data/img_align_celeba/'+imgName)
+        #img = np.swapaxes(img,0,2)
+        img=np.asarray(io.imread('./data/img_align_celeba/'+imgName))
         img = np.swapaxes(img,0,2)
         lab = self.labels[self.labels.image_id == imgName]
 
