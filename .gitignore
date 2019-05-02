@@ -25,3 +25,5 @@ vlfeat
 *.csv
 11-NN/data
 Challenge_Ignore
+13-FCN/data/pretrained_models
+13-FCN/logs
